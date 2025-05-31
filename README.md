@@ -11,6 +11,8 @@ Ce projet s'inscrit dans le cadre de l'UE RESA à l'ENSAM Metz. Il consiste à m
 - `séance3.py` : Krigeage sur jeu de test + visualisation
 - `séance4.py` : Optimisation inverse via algorithme génétique
 - `donnees_sim.xlsx` : Données d'entraînement et de test (fichier attendu dans le dossier)
+## étapes d'execution
+Sceance2.py  ->  séance3.py  ->  séance4.py
 
 ## 🧪 Environnement Python requis
 
