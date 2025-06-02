@@ -84,7 +84,7 @@ Une extension est en cours de développement pour proposer une interface Web ou 
 ## ✏️ Auteurs
 
 * 👨‍🔬 Salah-Eddine MAIMOUNI – ENSAM Casablanca × Metz – Gadz’Arts 2026
-* 👨‍🔬 Mohamed ES-SALHY – ENSAM Casablanca × Metz
+* 👨‍🔬 Mohamed ES-SALHY – ENSAM Casablanca × Metz– Gadz’Arts 2026
 
 ## 📄 Licence
 
