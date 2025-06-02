@@ -22,10 +22,10 @@ Ce projet vise à modéliser et optimiser le comportement d'une catapulte soumis
 
 ### 1. Clonage du dépôt
 
-```bash
 git clone https://github.com/<votre-utilisateur>/Mini-projet-RESA.git
 cd Mini-projet-RESA
-2. Création d’un environnement virtuel (optionnel mais recommandé)
+
+##  Création d’un environnement virtuel (optionnel mais recommandé)
 bash
 Copy
 Edit
