@@ -8,7 +8,10 @@ from pjt5_1 import *
 #%% - Fonction : variogramme théorique (polynôme ajusté)
 def variogramme_theorique(h):
     h = np.array(h)
-    gamma = 0.0025 * h**2 + 0.1045 * h - 0.0754
+    #gamma = 0.0025 * h**2 + 0.1045 * h - 0.0754
+    #variogramme Gaussien
+    C, a, nugget = 3.019, 26.969, 0.222
+    gamma = C*(1-np.exp(-3*(h/a)**2))+nugget
     gamma = np.maximum(gamma, 0)  # On s'assure que gamma ≥ 0 (physiquement plausible)
     return gamma
 
@@ -69,3 +72,4 @@ def coefficient_determination(z_test, z_estime):
     r2 = r2_score(z_test, z_estime)
     print(f"[coefficient_determination] R² calculé : {r2}")
     return r2
+
