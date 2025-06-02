@@ -1,13 +1,16 @@
 from pjt5_3 import *
+import os
 
 # Chargement des données d'entraînement
-x_train, z_train = importer_donnees("donnees_sim.xlsx", "Train")
+chemin_fichier = os.path.join(os.path.dirname(__file__), "donnees_sim.xlsx")
+
+x_train, z_train = importer_donnees(chemin_fichier, "Train")
 x_train_n = normaliser_donnees(x_train)
 
 # Initialisation de la population
 pop = first_pop(100)
 
-lll=[]
+matrice_distance=[]
 
 for i in range(50):  # 50 générations
     # Évaluation de la population actuelle
@@ -25,7 +28,7 @@ for i in range(50):  # 50 générations
 
     # Affichage
     print(f"Génération {i+1:>3} | Best fitness: {best_fitness:.4f} | Params: {best_params.flatten()}")
-    lll.append("Génération" + str(i+1) + "Best fitness:"+ str(best_fitness) + "Params:" + str(best_params.flatten()))
-print(np.array(lll))
+    matrice_distance.append("Génération" + str(i+1) + "Best fitness:"+ str(best_fitness) + "Params:" + str(best_params.flatten()))
+print(np.array(matrice_distance))
 
 
