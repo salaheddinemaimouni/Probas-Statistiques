@@ -151,3 +151,8 @@ def tracer_variogramme(var, h_pas):
 
 
 
+
+
+
+
+
