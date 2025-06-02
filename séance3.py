@@ -1,9 +1,13 @@
 import matplotlib.pyplot as plt
 from pjt5_1 import importer_donnees, normaliser_donnees, creer_matrice_distance
 from pjt5_2 import inverse, vecteur_variogramme, lambdas, estimation, variance, coefficient_determination
+import os
 
 # 1. Importer données d'entraînement
-x, z = importer_donnees("donnees_sim.xlsx", "Train")
+    # Obtenir le chemin absolu du fichier Excel situé dans le même dossier que le script
+chemin_fichier = os.path.join(os.path.dirname(__file__), "donnees_sim.xlsx")
+    # Appel de la fonction avec le chemin dynamique
+x, z = importer_donnees(chemin_fichier, "Train")
 
 # 2. Normaliser coordonnées
 x_norm = normaliser_donnees(x)
@@ -15,7 +19,7 @@ dist = creer_matrice_distance(x_norm)
 Gamma_inv = inverse(dist)
 
 # 5. Import données test et normalisation
-x_test, z_test = importer_donnees("donnees_sim.xlsx", "Test")
+x_test, z_test = importer_donnees(chemin_fichier, "Test")
 x_test_norm = normaliser_donnees(x_test)
 
 # 6. Prédictions et calcul des variances
@@ -33,7 +37,7 @@ for i, s0 in enumerate(x_test_norm):
 # 7. Évaluation finale du modèle
 r2 = coefficient_determination(z_test, estimations)
 
-# Optionnel : tracer comparaison valeurs réelles/estimées
+# tracer comparaison valeurs réelles/estimées
 import matplotlib.pyplot as plt
 plt.plot(z_test, label='Valeurs réelles')
 plt.plot(estimations, label='Estimations krigeage')
