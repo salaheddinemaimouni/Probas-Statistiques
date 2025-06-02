@@ -69,64 +69,81 @@ def decodage(pop, normalisee = False):
         return normaliser_donnees(pop_d)
 
 def fitness(Z_cible, pop, X_train, z_train):
+    # Décodage de la population (passage d'entiers encodés → réels normalisés)
     pop_n = decodage(pop, normalisee=True)
 
+    # Construction de la matrice des distances entre points d'entraînement
     dist_matrix = creer_matrice_distance(X_train)
+
+    # Inversion de la matrice de krigeage (matrice Gamma étendue)
     Gamma_inv = inverse(dist_matrix)
 
+    # Initialisation de la matrice des résultats [gènes + fitness]
     pop_fit = np.zeros((pop.shape[0], pop.shape[1] + 1))
+
+    # Copie de la population encodée dans les premières colonnes
     pop_fit[:,:-1] = pop
 
+    # Boucle d’évaluation sur chaque individu
     for i, individu in enumerate(pop_n):
+        # Construction du vecteur de variogramme entre individu et données d'entraînement
         vect = vecteur_variogramme(X_train, individu)
+
+        # Résolution du système de krigeage → poids λ et multiplicateur μ
         lmb, mu = lambdas(Gamma_inv, vect)
+
+        # Estimation de la sortie (distance atteinte) pour cet individu
         z_estime = estimation(lmb, z_train)
+
+        # Calcul de l’erreur absolue par rapport à la cible (fitness)
         pop_fit[i, -1] = abs(z_estime - Z_cible)
 
+    # Retourne la population avec erreur absolue ajoutée à la dernière colonne
     return pop_fit
 
 
 
+
 def selection(pop_fit):
-    taille_pop = len(pop_fit)
-    n_col = pop_fit.shape[1]  # ← adapte automatiquement
+    taille_pop = len(pop_fit)               # Nombre d’individus
+    n_col = pop_fit.shape[1]                # Nombre total de colonnes (gènes + fitness)
 
-    pop_selec = np.zeros((taille_pop, n_col))
-    r = np.zeros((3, n_col))
+    pop_selec = np.zeros((taille_pop, n_col))  # Nouvelle population sélectionnée
+    r = np.zeros((3, n_col))                  # Matrice temporaire pour stocker 3 candidats
 
-    for i in range(taille_pop):
-        for j in range(3):
+    for i in range(taille_pop):               # Pour chaque individu à sélectionner
+        for j in range(3):                    # On tire 3 individus au hasard
             rdm = randint(0, taille_pop - 1)
-            r[j, :] = pop_fit[rdm, :]
+            r[j, :] = pop_fit[rdm, :]         # Stockage du candidat
 
-        indice_meilleur = np.argmin(r[:, -1])
-        pop_selec[i, :] = r[indice_meilleur, :]
+        indice_meilleur = np.argmin(r[:, -1]) # On prend celui avec la meilleure fitness (min erreur)
+        pop_selec[i, :] = r[indice_meilleur, :]  # Ajout à la population sélectionnée
 
-    return pop_selec
+    return pop_selec                          # Retourne la nouvelle population
+
 
 
 
 def croisement(pop_selec):
-    taille_pop = pop_selec.shape[0]
-    pop_cross = np.zeros_like(pop_selec)
+    taille_pop = pop_selec.shape[0]             # Nombre d’individus
+    pop_cross = np.zeros_like(pop_selec)        # Initialisation de la nouvelle population
 
-    for i in range(0, taille_pop, 2):
-        parent1 = pop_selec[i, :-1]
-        parent2 = pop_selec[i+1, :-1]
+    for i in range(0, taille_pop, 2):           # On traite 2 individus à la fois
+        parent1 = pop_selec[i, :-1]             # Gènes du parent 1 (hors fitness)
+        parent2 = pop_selec[i+1, :-1]           # Gènes du parent 2
 
-        enfant1 = np.copy(parent1)
-        enfant2 = np.copy(parent2)
+        enfant1 = np.copy(parent1)              # Copie parent 1
+        enfant2 = np.copy(parent2)              # Copie parent 2
 
-        for j in range(10):  # 10 gènes
-            if np.random.rand() < 0.5:
-                # échange
+        for j in range(10):                     # 10 gènes par individu
+            if np.random.rand() < 0.5:          # 50% de chance d’échanger le gène
                 enfant1[j], enfant2[j] = parent2[j], parent1[j]
 
-        # on remet dans la population (fitness sera recalculé après)
-        pop_cross[i, :-1] = enfant1
+        pop_cross[i, :-1] = enfant1             # Remplir la population avec les enfants
         pop_cross[i+1, :-1] = enfant2
 
-    return pop_cross
+    return pop_cross                            # Population après croisement
+
 
 
 def mutation(pop_cross):
